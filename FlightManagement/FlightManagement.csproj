@@ -5,7 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Publish\**" />
+    <Content Remove="Publish\**" />
+    <EmbeddedResource Remove="Publish\**" />
+    <None Remove="Publish\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Models\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>

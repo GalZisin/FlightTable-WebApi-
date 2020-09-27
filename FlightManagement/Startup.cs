@@ -25,7 +25,9 @@ namespace FlightManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(option => option.AddDefaultPolicy(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod()));
+            //services.AddCors(option => option.AddDefaultPolicy(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod()));
+            //services.AddControllers();
+            services.AddCors(option => option.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
             services.AddControllers();
         }
 
@@ -37,10 +39,28 @@ namespace FlightManagement
                 app.UseDeveloperExceptionPage();
             }
 
+            app.Use(async (context, next) =>
+
+            {
+                await next();
+                if (context.Response.StatusCode == 404 && !System.IO.Path.HasExtension(context.Request.Path.Value))
+
+                {
+                    context.Request.Path = "/index.html";
+                    await next();
+                }
+            });
+
+            app.UseDefaultFiles();
+
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseCors();
+
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
